@@ -1,5 +1,7 @@
 package com.JtoP.Spring;
 
+import com.JtoP.Spring.boundedContext.answer.entity.Answer;
+import com.JtoP.Spring.boundedContext.answer.repository.AnswerRepository;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,9 @@ class ApplicationTests {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
 
     @BeforeEach
         // 각 테스트 메서드가 실행되기 전에 실행되는 메서드
@@ -134,6 +139,47 @@ class ApplicationTests {
         Question q = oq.get();
         questionRepository.delete(q);
         assertEquals(1, questionRepository.count());
+    }
+
+    // 질문 데이터 가졍오기
+    /*
+    SELCET * FROM question AS q1 WHERE q1.id = ?
+     */
+
+    // 특정 질문에 대한 답변 추가
+    /*
+    INSERT INTO answer (content, create_date, question_id) VALUES (?, ?, ?)
+    또는
+    INSERT INTO answer
+    SET content = ?,
+        create_date = ?,
+        question_id = ?
+     */
+
+    @Test
+    @DisplayName("답변 데이터 생성 후 저장")
+    void t9(){
+        // v1
+        Optional<Question> oq = questionRepository.findById(2);
+        assertTrue(oq.isPresent());
+        Question q = oq.get();
+
+        // v2
+        // Question q = questionRepository.findById(2).get();
+
+        Answer a = new Answer();
+        a.setContent("네 자동으로 생성됩니다.");
+        a.setQuestion(q); // 어떤 질문에 대한 답변인지 알기 위해서 Question 객체 필요
+        a.setCreateDate(LocalDateTime.now());
+        answerRepository.save(a);
+
+        /*  빌더버젼
+        Answer a2 = Answer.builder()
+                .content("네 자동으로 생성됩니다.")
+                .question(q)
+                .createDate(LocalDateTime.now())
+                .build();
+         */
     }
 
 }
