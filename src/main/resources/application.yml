@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: dev, test
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: qnaService
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/qnaService?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: root
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    format-sql: true
+#server:
+#  port: 8030
