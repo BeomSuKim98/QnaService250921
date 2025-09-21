@@ -23,6 +23,6 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     @Query(value = "ALTER TABLE question AUTO_INCREMENT = 1", nativeQuery = true)
     // Query 어노테이션을 사용하여 네이티브 SQL 쿼리를 실행
     // AUTO_INCREMENT 값을 1로 재설정, nativeQuery = true -> SQL 문법을 직접 사용
-    void resetAutoIncrement();
+    void clearAutoIncrement();
     // JPA에서 자동 생성되는 PK를 강제로 되돌리기 때문에 무결성 문제 발생 가능, 테스트 코드에서만 사용
 }

@@ -34,6 +34,14 @@ class ApplicationTests {
     @BeforeEach
         // 각 테스트 메서드가 실행되기 전에 실행되는 메서드
     void beforeEach() {
+        // 답변 데이터 삭제
+        answerRepository.deleteAll();
+        answerRepository.clearAutoIncrement(); // answer 테이블의 AUTO_INCREMENT 초기화
+
+        // 질문 데이터 삭제
+        questionRepository.deleteAll();
+        questionRepository.clearAutoIncrement(); // question 테이블의 AUTO_INCREMENT 초기화
+
         Question q1 = new Question();
         q1.setSubject("sbb가 무엇인가요?");
         q1.setContent("sbb에 대해서 알고 싶습니다.");
@@ -47,6 +55,13 @@ class ApplicationTests {
                 .build();
 
         questionRepository.save(q2);
+
+        // 답변 데이터 생성
+        Answer a1 = new Answer();
+        a1.setContent("네 자동으로 생성됩니다.");
+        a1.setQuestion(q2);
+        a1.setCreateDate(LocalDateTime.now());
+        answerRepository.save(a1);
     }
 
     @Test
@@ -182,4 +197,13 @@ class ApplicationTests {
          */
     }
 
+    @Test
+    @DisplayName("답변 데이터 조회")
+    void t10() {
+        // 답변 데이터 조회
+        Optional<Answer> oa = answerRepository.findById(1);
+        assertTrue(oa.isPresent());
+        Answer a = oa.get();
+        assertEquals(2, a.getQuestion().getId());
+    }
 }
