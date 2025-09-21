@@ -1,5 +1,6 @@
 package com.JtoP.Spring.boundedContext.answer.entity;
 
+import com.JtoP.Spring.boundedContext.question.entity.Question;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,4 +21,7 @@ public class Answer {
     private String content;
 
     private LocalDateTime createDate;
+
+    @ManyToOne
+    private Question question;
 }
