@@ -2,6 +2,7 @@ package com.JtoP.Spring;
 
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
@@ -25,25 +26,51 @@ class ApplicationTests {
     @Autowired
     private QuestionRepository questionRepository;
 
-    @Test
-    @DisplayName("데이터 저장")
-        // 사용자가 읽을 수 있게 표기
-    void t1() {
+    @BeforeEach
+        // 각 테스트 메서드가 실행되기 전에 실행되는 메서드
+    void beforeEach() {
         Question q1 = new Question();
         q1.setSubject("sbb가 무엇인가요?");
         q1.setContent("sbb에 대해서 알고 싶습니다.");
         q1.setCreateDate(LocalDateTime.now());
-        questionRepository.save(q1); // 첫 번째 질문 저장
-    }
+        questionRepository.save(q1);
 
-    void t2(){
         Question q2 = Question.builder()
                 .subject("스프링부트 모델 질문입니다.")
                 .content("id는 자동으로 생성되나요?")
                 .createDate(LocalDateTime.now())
                 .build();
 
-        questionRepository.save(q2); // 두 번째 질문 저장, 빌더를 이용한 저장 방법
+        questionRepository.save(q2);
+    }
+
+    @Test
+    @DisplayName("데이터저장")
+    void t1() {
+        Question q1 = new Question();
+        q1.setSubject("스프링부트 학습은 어떻게 해야 하나요?");
+        q1.setContent("스프링부트 학습은 처음입니다.");
+        q1.setCreateDate(LocalDateTime.now());
+        questionRepository.save(q1);  // 첫 번째 질문 저장
+
+        Question q2 = Question.builder()
+                .subject("스프링부트 모델 질문입니다.")
+                .content("id는 자동으로 생성되나요?")
+                .createDate(LocalDateTime.now())
+                .build();
+
+        questionRepository.save(q2); // 두 번째 질문 저장
+    }
+
+    @Test
+    @DisplayName("findAll")
+    void t2() {
+        // SELECT * FROM question;
+        List<Question> all = questionRepository.findAll();
+        assertEquals(2, all.size());
+
+        Question q = all.get(0);
+        assertEquals("sbb가 무엇인가요?", q.getSubject());
     }
 
     @Test
@@ -94,6 +121,19 @@ class ApplicationTests {
         Question q = oq.get();
         q.setSubject("수정된 제목");
         questionRepository.save(q);
+    }
+
+    @Test
+    @DisplayName("데이터 삭제")
+    void t8(){
+        // SELECT COUNT(*) FROM question
+        //count() : 테이블에 있는 데이터의 개수를 반환
+        assertEquals(2, questionRepository.count());
+        Optional<Question> oq = questionRepository.findById(1);
+        assertTrue(oq.isPresent());
+        Question q = oq.get();
+        questionRepository.delete(q);
+        assertEquals(1, questionRepository.count());
     }
 
 }
