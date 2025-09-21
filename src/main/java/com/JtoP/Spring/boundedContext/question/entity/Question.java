@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(length = 200)
     private String subject;
