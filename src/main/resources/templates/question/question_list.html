@@ -1,7 +1,23 @@
-<h2>Hello Template</h2>
+<h2>질문 리스트</h2>
 
-<h2>[[${age}]]</h2>
-<h2 th:text="${age}"></h2>
+<table>
+  <thead>
+    <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성일</th>
+    </tr>
+  </thead>
 
-<h2>[[${age}]]살</h2>
-<h2 th:text="|${age}살|"></h2>
+  <tbody>
+<!--
+  ${...} 모델 데이터 접근 예) a th:text="${question.id}"
+  @{...} URL 매핑 접근 예) a th:href="@{/question/list}"
+ -->
+  <tr th:each="question : ${questionList}">
+    <td th:text="${question.id}"></td>
+    <td th:text="${question.subject}"></td>
+    <td th:text="${question.createDate}"></td>
+  </tr>
+  </tbody>
+</table>
