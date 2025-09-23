@@ -25,7 +25,27 @@
 </table>
 </div>
 
+<!--
+  여기서 추가한 loop 객체를 이용하여 루프 내에서 다음과 같은 속성들을 사용할 수 있습니다:
 
+    순서 관련 속성
+    loop.index: 루프의 순서 (0부터 1씩 증가)
+    loop.count: 루프의 순서 (1부터 1씩 증가)
+
+    크기 관련 속성
+    loop.size: 반복 객체의 요소 개수 (예: questionList의 요소 개수)
+
+    위치 판별 속성
+    loop.first: 루프의 첫 번째 순서인 경우 true
+    loop.last: 루프의 마지막 순서인 경우 true
+
+    홀짝 판별 속성
+    loop.odd: 루프의 홀수 번째 순서인 경우 true
+    loop.even: 루프의 짝수 번째 순서인 경우 true
+
+    현재 객체
+    loop.current: 현재 대입된 객체 (여기서는 question과 동일)
+-->
 <h3>loop 사용버전</h3>
 <div th:if="${questionList != null}">
   <table>
@@ -46,3 +66,22 @@
     </tbody>
   </table>
 </div>
+
+<!-- 루프 사용 예시 -->
+<!--<div th:each="question, loop : ${questionList}">-->
+<!--  <p>순번 (0부터): <span th:text="${loop.index}"></span></p>-->
+<!--  <p>순번 (1부터): <span th:text="${loop.count}"></span></p>-->
+<!--  <p>전체 개수: <span th:text="${loop.size}"></span></p>-->
+<!--  <p>첫 번째?: <span th:text="${loop.first}"></span></p>-->
+<!--  <p>마지막?: <span th:text="${loop.last}"></span></p>-->
+<!--  <p>홀수 번째?: <span th:text="${loop.odd}"></span></p>-->
+<!--  <p>짝수 번째?: <span th:text="${loop.even}"></span></p>-->
+<!--  <p>질문 내용: <span th:text="${question.content}"></span></p>-->
+<!--</div>-->
+
+<!--
+  loop.index는 배열이나 리스트의 인덱스로 활용 가능
+  loop.first와 loop.last는 첫 번째/마지막 요소에 특별한 스타일 적용 시 유용
+  loop.odd와 loop.even은 테이블의 행 색상을 번갈아 표시할 때 활용
+-->
+
