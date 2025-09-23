@@ -25,6 +25,9 @@ public class QuestionController {
         // SELECT * FROM question
         List<Question> questionList = questionRepository.findAll();
         model.addAttribute("questionList", questionList);
+
+        System.out.println("안녕하세요.");
+
         return "question/question_list";
     }
 }

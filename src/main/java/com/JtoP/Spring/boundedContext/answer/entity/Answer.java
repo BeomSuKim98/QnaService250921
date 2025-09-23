@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @Entity
+@ToString
 public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,5 +24,6 @@ public class Answer {
     private LocalDateTime createDate;
 
     @ManyToOne
+    @ToString.Exclude
     private Question question;
 }
