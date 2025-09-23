@@ -46,27 +46,6 @@
     현재 객체
     loop.current: 현재 대입된 객체 (여기서는 question과 동일)
 -->
-<h3>loop 사용버전</h3>
-<div th:if="${questionList != null}">
-  <table>
-    <thead>
-    <tr>
-      <th>번호</th>
-      <th>제목</th>
-      <th>작성일</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="question, loop : ${questionList}">
-      <td>[[${loop.count]]</td>
-      <td th:text="${question.subject}"></td>
-      <td th:text="${question.createDate}"></td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-
 <!-- 루프 사용 예시 -->
 <!--<div th:each="question, loop : ${questionList}">-->
 <!--  <p>순번 (0부터): <span th:text="${loop.index}"></span></p>-->
