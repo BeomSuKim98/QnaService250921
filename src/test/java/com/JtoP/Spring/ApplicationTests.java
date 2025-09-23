@@ -4,6 +4,7 @@ import com.JtoP.Spring.boundedContext.answer.entity.Answer;
 import com.JtoP.Spring.boundedContext.answer.repository.AnswerRepository;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -59,7 +61,7 @@ class ApplicationTests {
         // 답변 데이터 생성
         Answer a1 = new Answer();
         a1.setContent("네 자동으로 생성됩니다.");
-        a1.setQuestion(q2);
+        q2.addAnswer(a1); // 양방향 연관관계 설정
         a1.setCreateDate(LocalDateTime.now());
         answerRepository.save(a1);
     }
@@ -206,4 +208,22 @@ class ApplicationTests {
         Answer a = oa.get();
         assertEquals(2, a.getQuestion().getId());
     }
+
+    @Test
+    @Transactional // 테스트 환경에서는 트랙잭션 없이 DB로 연결이 이어지지 않는다.
+    @DisplayName("질문 데이터로 답변 데이터 조회")
+    @Rollback(false) // 테스트 메서드가 끝난 후 트랜잭션을 롤백하지 않음, 실제 DB에 반영
+    void t11() {
+        // SELECT * FROM question WHERE id = 2
+        Optional<Question> oq = questionRepository.findById(2);
+        assertTrue(oq.isPresent());
+        Question q = oq.get(); // get이후에는 DB 연결을 끓음
+        // 질문 객체 생성 후 getAnswerList() 메서드를 통해 해당 질문에 달린 모든 답변을 가져옴
+
+        List<Answer> answerList = q.getAnswerList();
+        assertEquals(1, answerList.size());
+        assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
+    }
+
+
 }

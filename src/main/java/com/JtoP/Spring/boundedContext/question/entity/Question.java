@@ -28,8 +28,9 @@ public class Question {
     private LocalDateTime createDate;
 
     // mappedBy = "question" -> Answer 클래스의 question 필드와 매핑
-    // CasecadeType.REMOVE 질문이 삭제되면 그 안에 달려있는 답변도 같이 삭제 됌
-
+    // CascadeType.REMOVE 질문이 삭제되면 그 안에 달려있는 답변도 같이 삭제 됌
+    // fetch = FetchType.EAGER : 즉시 로딩을 통해 질문과 답변을 함께 가져옴
+    // fetch = FetchType.LAZY : 지연 로딩을 통해 질문을 가져올 때
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
     @Builder.Default // 빌더 패턴으로 객체를 생성할 때 필드 초기화
     private List<Answer> answerList = new ArrayList<>();

@@ -2,3 +2,7 @@
 spring:
   datasource:
     url: jdbc:mariadb://127.0.0.1:3306/qnaService__test?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+
+logging:
+  level:
+    org.springframework.jdbc.datasource: DEBUG
