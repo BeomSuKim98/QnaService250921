@@ -2,6 +2,7 @@ package com.JtoP.Spring.boundedContext.question.controller;
 
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
+import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
@@ -15,16 +16,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping("/question")
 @RequiredArgsConstructor
+@RequestMapping("/question")
 public class QuestionController {
-    private final QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
     @GetMapping("/list")
     public String showList(Model model){
         // findALL() : 모든 데이터를 조회
         // SELECT * FROM question
-        List<Question> questionList = questionRepository.findAll();
+        List<Question> questionList = questionService.getList();
         model.addAttribute("questionList", questionList);
 
         System.out.println("안녕하세요.");
@@ -34,6 +35,9 @@ public class QuestionController {
 
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable Integer id) {
+        Question question = questionService.getQuestion(id);
+        model.addAttribute("question", question);
+
         return "question/question_detail";
     }
 }
