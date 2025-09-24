@@ -25,6 +25,6 @@ public class AnswerController {
         // id에 해당하는 질문을 데이터베이스에서 조회
 
         return String.format("redirect:/question/detail/%s", id);
-        // 저장이 끝나고 리다이렉트
+        // 저장이 끝나고 리다이렉트: 브라우저에게 새로운 URL로 이동하라고 지시
     }
 }
