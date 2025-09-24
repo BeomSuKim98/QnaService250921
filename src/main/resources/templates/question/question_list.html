@@ -1,9 +1,17 @@
+<!-- 부트스트랩 css 불러오기 -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+
+<div class="container my-3" th:if="${questionList != null}">
 <h2>질문 리스트</h2>
 
 <h3>each 사용버전</h3>
 <div th:if="${questionList != null}">
-<table>
-  <thead>
+<table class="table">
+  <thead class="table-dark">
     <tr>
         <th>번호</th>
         <th>제목</th>
@@ -19,10 +27,11 @@
   <tr th:each="question : ${questionList}">
     <td th:text="${question.id}"></td>
     <td th:text="${question.subject}"></td>
-    <td th:text="${question.createDate}"></td>
+    <td th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></td>
   </tr>
   </tbody>
 </table>
+</div>
 </div>
 
 <!--
