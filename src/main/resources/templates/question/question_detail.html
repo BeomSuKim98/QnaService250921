@@ -1,3 +1,8 @@
-<h2>
-  <span th:text="|${id}번 질문 상세내용|"></span>
-</h2>
+<h2 th:text="${question.subject}"></h2>
+
+<div th:text="${question.content}"></div>
+
+<form th:action="@{|/answer/create/${question.id}|}" method="POST">
+  <textarea name="content" id="content" rows="15"></textarea>
+  <input type="submit" value="답변등록">
+</form>
