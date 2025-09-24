@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,5 +30,10 @@ public class QuestionController {
         System.out.println("안녕하세요.");
 
         return "question/question_list";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable Integer id) {
+        return "question/question_detail";
     }
 }
