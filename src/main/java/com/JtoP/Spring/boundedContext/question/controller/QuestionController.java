@@ -3,6 +3,8 @@ package com.JtoP.Spring.boundedContext.question.controller;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
 import com.JtoP.Spring.boundedContext.question.service.QuestionService;
+import com.JtoP.Spring.boundedContext.question.input.QuestionForm;
+
 import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,10 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String questionCreate(String subject, String content) {
+    public String questionCreate(QuestionForm questionForm) {
+        String subject = questionForm.getSubject();
+        String content = questionForm.getContent();
+
         if(subject == null || subject.trim().isEmpty()){
             throw new RuntimeException("제목을 입력해주세요.");
         }
