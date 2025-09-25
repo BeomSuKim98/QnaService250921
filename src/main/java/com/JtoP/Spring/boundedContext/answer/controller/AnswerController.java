@@ -31,7 +31,7 @@ public class AnswerController {
 
         Answer answer = answerService.create(question, content);
 
-        return String.format("redirect:/question/detail/%s", id);
+        return "redirect:/question/detail/%s".formatted(id);
         // 저장이 끝나고 리다이렉트: 브라우저에게 새로운 URL로 이동하라고 지시
     }
 }
