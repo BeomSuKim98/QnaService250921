@@ -5,11 +5,13 @@ import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
 import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 import com.JtoP.Spring.boundedContext.question.input.QuestionForm;
 
+import jakarta.validation.Valid;
 import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,27 +29,13 @@ public class QuestionController {
     }
 
     @PostMapping("/create")
-    public String questionCreate(QuestionForm questionForm) {
-        String subject = questionForm.getSubject();
-        String content = questionForm.getContent();
-
-        if(subject == null || subject.trim().isEmpty()){
-            throw new RuntimeException("제목을 입력해주세요.");
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+        // 에러 메시지 보유 검사후 있으면 true, 없으면 false 반환
+        if (bindingResult.hasErrors()) {
+            return "question/question_form";
         }
 
-        if(subject.trim().length() > 200){
-            throw new RuntimeException("제목은 200자 이하로 입력해주세요.");
-        }
-
-        if(content == null || content.trim().isEmpty()){
-            throw new RuntimeException("내용을 입력해주세요.");
-        }
-
-        if(content.trim().length() > 2000){
-            throw new RuntimeException("내용은 2000자 이하로 입력해주세요.");
-        }
-
-        questionService.create(subject, content);
+        questionService.create(questionForm.getSubject(), questionForm.getContent());
         return "redirect:/question/list";
     }
 
