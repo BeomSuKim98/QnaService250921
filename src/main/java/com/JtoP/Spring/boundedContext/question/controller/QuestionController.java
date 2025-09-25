@@ -28,8 +28,6 @@ public class QuestionController {
         List<Question> questionList = questionService.getList();
         model.addAttribute("questionList", questionList);
 
-        System.out.println("안녕하세요.");
-
         return "question/question_list";
     }
 
