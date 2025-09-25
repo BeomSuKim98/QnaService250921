@@ -26,6 +26,22 @@ public class QuestionController {
 
     @PostMapping("/create")
     public String questionCreate(String subject, String content) {
+        if(subject == null || subject.trim().isEmpty()){
+            throw new RuntimeException("제목을 입력해주세요.");
+        }
+
+        if(subject.trim().length() > 200){
+            throw new RuntimeException("제목은 200자 이하로 입력해주세요.");
+        }
+
+        if(content == null || content.trim().isEmpty()){
+            throw new RuntimeException("내용을 입력해주세요.");
+        }
+
+        if(content.trim().length() > 2000){
+            throw new RuntimeException("내용은 2000자 이하로 입력해주세요.");
+        }
+
         questionService.create(subject, content);
         return "redirect:/question/list";
     }
