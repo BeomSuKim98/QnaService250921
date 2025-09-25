@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class AnswerController {
         Question question = questionService.getQuestion(id);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("question", question;
+            model.addAttribute("question", question);
             return  "question/question_detail";
         }
 

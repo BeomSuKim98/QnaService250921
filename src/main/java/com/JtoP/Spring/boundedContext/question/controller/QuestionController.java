@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+//import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +22,12 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;
 
-    @GetMapping("/create")
-    public String questionCreate(QuestionForm questionForm) {
+    public String questionCreate(@ModelAttribute("questionForm") QuestionForm form, Model model) {
+        // 선택: GET에서도 #fields가 절대 안 터지게 "빈" BindingResult까지 미리 올리기
+        model.addAttribute(
+                org.springframework.validation.BindingResult.MODEL_KEY_PREFIX + "questionForm",
+                new org.springframework.validation.BeanPropertyBindingResult(form, "questionForm")
+        );
         return "question/question_form";
     }
 
