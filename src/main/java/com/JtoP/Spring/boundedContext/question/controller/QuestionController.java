@@ -1,7 +1,6 @@
 package com.JtoP.Spring.boundedContext.question.controller;
 
 import com.JtoP.Spring.boundedContext.question.entity.Question;
-import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
 import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 import com.JtoP.Spring.boundedContext.question.input.QuestionForm;
 
@@ -12,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/create")
-    public String questionCreate() {
+    public String questionCreate(QuestionForm questionForm) {
         return "question/question_form";
     }
 
