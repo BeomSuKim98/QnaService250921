@@ -3,6 +3,7 @@ package com.JtoP.Spring.boundedContext.question.controller;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 import com.JtoP.Spring.boundedContext.question.input.QuestionForm;
+import com.JtoP.Spring.boundedContext.answer.input.AnswerForm;
 
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;
@@ -47,7 +48,8 @@ public class QuestionController {
     }
 
     @GetMapping("/detail/{id}")
-    public String detail(Model model, @PathVariable Integer id) {
+    public String detail(Model model, @PathVariable Integer id,
+                         AnswerForm answerForm) {
         Question question = questionService.getQuestion(id);
         model.addAttribute("question", question);
 

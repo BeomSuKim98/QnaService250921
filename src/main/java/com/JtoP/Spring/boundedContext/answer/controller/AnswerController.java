@@ -1,13 +1,16 @@
 package com.JtoP.Spring.boundedContext.answer.controller;
 
 import com.JtoP.Spring.boundedContext.answer.entity.Answer;
+import com.JtoP.Spring.boundedContext.answer.input.AnswerForm;
 import com.JtoP.Spring.boundedContext.answer.service.AnswerService;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +26,17 @@ public class AnswerController {
     @PostMapping("/create/{id}")
     public String createAnswer(Model model,
                                @PathVariable("id") Integer id,
-                               @RequestParam(value="content") String content) {
-        // pathVariable("id") : URL 경로에 포함된 변수를 메서드 매개변수로 전달
-        // requestParam("content") : 폼 데이터로 전달된 변수를 메서드 매개변수로 전달
+                               @Valid AnswerForm answerForm,
+                               BindingResult bindingResult) {
         Question question = questionService.getQuestion(id);
-        // id에 해당하는 질문을 데이터베이스에서 조회
 
-        Answer answer = answerService.create(question, content);
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("question", question;
+            return  "question/question_detail";
+        }
+
+
+        Answer answer = answerService.create(question, answerForm.getContent());
 
         return "redirect:/question/detail/%s".formatted(id);
         // 저장이 끝나고 리다이렉트: 브라우저에게 새로운 URL로 이동하라고 지시
