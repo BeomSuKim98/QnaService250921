@@ -8,10 +8,10 @@ import com.JtoP.Spring.boundedContext.answer.input.AnswerForm;
 import jakarta.validation.Valid;
 import org.springframework.ui.Model;
 
+import org.springframework.data.domain.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-//import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,12 +39,14 @@ public class QuestionController {
     }
 
     @GetMapping("/list")
-    public String showList(Model model){
-        // findALL() : 모든 데이터를 조회
-        // SELECT * FROM question
-        List<Question> questionList = questionService.getList();
-        model.addAttribute("questionList", questionList);
-
+    public String showList(Model model,
+                           @RequestParam(defaultValue = "0") int page){
+        Page<Question> paging = questionService.getList(page);
+//        System.out.println("[/question/list] page=" + page
+//                + ", totalElements=" + paging.getTotalElements()
+//                + ", numberOfElements=" + paging.getNumberOfElements()
+//                + ", isEmpty=" + paging.isEmpty());
+        model.addAttribute("paging", paging);
         return "question/question_list";
     }
 

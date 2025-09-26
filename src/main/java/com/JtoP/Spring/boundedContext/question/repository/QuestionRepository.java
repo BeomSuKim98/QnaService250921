@@ -1,7 +1,11 @@
 package com.JtoP.Spring.boundedContext.question.repository;
 
 import com.JtoP.Spring.boundedContext.question.entity.Question;
+
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -9,11 +13,14 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
-    Question findBySubject(String s);
+    Question findBySubject(String subject);
 
-    Question findBySubjectAndContent(String s, String s1);
+    Question findBySubjectAndContent(String subject, String content);
 
-    List<Question> findBySubjectLike(String s);
+    List<Question> findBySubjectLike(String keyword);
+
+    //    페이징 된 데이터를 반환
+    Page<Question> findAll(Pageable pageable);
 
     @Modifying // Query는 기본적으로 SELECT 문에 사용되므로
     // INSERT, UPDATE, DELETE 같은 변경 작업을 수행할 때는 @Modifying 어노테이션이 필요
@@ -25,4 +32,5 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     // AUTO_INCREMENT 값을 1로 재설정, nativeQuery = true -> SQL 문법을 직접 사용
     void clearAutoIncrement();
     // JPA에서 자동 생성되는 PK를 강제로 되돌리기 때문에 무결성 문제 발생 가능, 테스트 코드에서만 사용
+
 }

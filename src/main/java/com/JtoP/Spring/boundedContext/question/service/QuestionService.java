@@ -3,8 +3,12 @@ package com.JtoP.Spring.boundedContext.question.service;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import com.JtoP.Spring.global.exception.DataNotFoundException;
+
+import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,8 +19,9 @@ import java.util.Optional;
 public class QuestionService {
     private final QuestionRepository questionRepository;
 
-    public List<Question> getList() {
-        return questionRepository.findAll();
+    public Page<Question> getList(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return questionRepository.findAll(pageable);
     }
 
     public Question getQuestion(Integer id){
