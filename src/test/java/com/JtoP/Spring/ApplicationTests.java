@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,6 +35,9 @@ class ApplicationTests {
 
     @Autowired
     private AnswerRepository answerRepository;
+
+    @Autowired
+    private QuestionService questionService;
 
     @BeforeEach
         // 각 테스트 메서드가 실행되기 전에 실행되는 메서드
@@ -226,5 +231,15 @@ class ApplicationTests {
         assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
     }
 
-
+    @Test
+    @DisplayName("대량 데이터 삽입")
+    void t12() {
+        IntStream.rangeClosed(3, 300).forEach(i -> {
+            Question q = new Question();
+            q.setSubject("테스트 데이터입니다. " + i);
+            q.setContent("내용무");
+            q.setCreateDate(LocalDateTime.now());
+            questionRepository.save(q);
+        });
+    }
 }
