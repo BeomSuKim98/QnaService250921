@@ -13,7 +13,7 @@
 
       <tbody>
         <tr th:each="q, loop : ${paging}">
-          <td th:text="${q.id}"></td>
+          <td th:text="${paging.totalElements - loop.index}"></td>
           <td>
             <a th:href="@{|/question/detail/${q.id}|}" th:text="${q.subject}"></a>
           </td>
