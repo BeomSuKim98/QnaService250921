@@ -1,65 +1,7 @@
 <html layout:decorate="~{layout}">
   <h2>질문 리스트</h2>
   <div layout:fragment="content" class="test">
-    <div class="container my-3"
-         th:if="${paging != null}">
-    <table class="table">
-      <thead class="table-dark">
-        <tr>
-            <td>속성</td>
-            <td>설명</td>
-            <td>값</td>
-        </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td>paging.isEmpty</td>
-        <td>페이지 존재 여부</td>
-        <td th:text="${paging.empty}">?</td>
-      </tr>
-      <tr>
-        <td>totalElements</td>
-        <td>전체 데이터 수</td>
-        <td th:text="${paging.totalElements}"></td>
-      </tr>
-      <tr>
-        <td>totalPages</td>
-        <td>전체 페이지 수</td>
-        <td th:text="${paging.totalPages}"></td>
-      </tr>
-      <tr>
-        <td>size</td>
-        <td>한 페이지 당 데이터 수</td>
-        <td th:text="${paging.size}"></td>
-      </tr>
-      <tr>
-        <td>number</td>
-        <td>현재 페이지 번호(0부터)</td>
-        <td th:text="${paging.number}"></td>
-      </tr>
-      <tr>
-        <td>hasPrevious</td>
-        <td>이전 페이지 존재 여부</td>
-        <td th:text="${paging.hasPrevious}"></td>
-      </tr>
-      <tr>
-        <td>hasNext</td>
-        <td>다음 페이지 존재 여부</td>
-        <td th:text="${paging.hasNext}"></td>
-      </tr>
-      <tr>
-        <td>isFirst</td>
-        <td>첫 페이지 여부</td>
-        <td th:text="${paging.first}"></td>
-      </tr>
-      <tr>
-        <td>isLast</td>
-        <td>마지막 페이지 여부</td>
-        <td th:text="${paging.last}"></td>
-      </tr>
-      </tbody>
-    </table>
-
+    <div class="container my-3" th:if="${paging != null}">
     <table class="table">
       <thead class="table-dark">
         <tr>
@@ -79,6 +21,17 @@
         </tr>
       </tbody>
     </table>
+      <nav>
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a class="page-link" href="#">이전</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item"><a class="page-link" href="#">다음</a>
+          </li>
+        </ul>
+      </nav>
     <a th:href="@{/question/create}" class="btn btn-primary">질문 등록하기</a>
   </div>
   </div>
