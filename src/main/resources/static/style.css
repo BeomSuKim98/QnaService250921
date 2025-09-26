@@ -34,3 +34,7 @@ textarea{
 input[type="text"]{
 	margin-top:10px;
 }
+
+.bottom-bar{
+  height: 70px;
+}
