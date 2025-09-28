@@ -16,8 +16,9 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers(new AntPathRequestMatcher("/**")).permitAll());
+                .formLogin((formLogin) -> formLogin
+                        .loginPage("/user/login") // 사용자가 정의한 로그인 페이지를 사용
+                        .defaultSuccessUrl("/")); // 성공시 루트로 이동
 
                 return http.build();// 모든 경로에 대해 인증 없이 접근 허용
     }
