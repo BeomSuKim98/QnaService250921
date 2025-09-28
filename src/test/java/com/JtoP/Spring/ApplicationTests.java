@@ -60,7 +60,7 @@ class ApplicationTests {
 
         userRepository.deleteAll();
         userRepository.clearAutoIncrement(); // user 테이블의 AUTO_INCREMENT 초기화
-        
+
         userService.create("user1", "user1@test.com", "1234");
         userService.create("user2", "user2@test.com", "1234");
 
