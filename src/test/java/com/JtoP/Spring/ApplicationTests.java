@@ -4,6 +4,8 @@ import com.JtoP.Spring.boundedContext.answer.entity.Answer;
 import com.JtoP.Spring.boundedContext.answer.repository.AnswerRepository;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
+import com.JtoP.Spring.boundedContext.user.repository.UserRepository;
+import com.JtoP.Spring.boundedContext.user.service.UserService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +41,12 @@ class ApplicationTests {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
+
     @BeforeEach
         // 각 테스트 메서드가 실행되기 전에 실행되는 메서드
     void beforeEach() {
@@ -49,6 +57,12 @@ class ApplicationTests {
         // 질문 데이터 삭제
         questionRepository.deleteAll();
         questionRepository.clearAutoIncrement(); // question 테이블의 AUTO_INCREMENT 초기화
+
+        userRepository.deleteAll();
+        userRepository.clearAutoIncrement(); // user 테이블의 AUTO_INCREMENT 초기화
+        
+        userService.create("user1", "user1@test.com", "1234");
+        userService.create("user2", "user2@test.com", "1234");
 
         Question q1 = new Question();
         q1.setSubject("sbb가 무엇인가요?");
