@@ -2,6 +2,8 @@ package com.JtoP.Spring.global.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,4 +33,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
     // 기본 설정으로 모든 요청에 대해 인증을 요구함.
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+
+        // AuthenticationManager는 인증을 처리하는 핵심 인터페이스
+        // AuthenticationManager는 사용자의 자격 증명을 확인하고 인증된 사용자에 대한 정보를 반환
+        // AuthenticationManager는 다양한 인증 방법(폼 로그인, OAuth2 등)을 지원
+        // 그냥 외우기
+    }
 }
