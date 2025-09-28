@@ -18,11 +18,25 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
-                .formLogin((formLogin) -> formLogin
+                .authorizeHttpRequests(
+                        authorizeHttpRequests -> authorizeHttpRequests
+                                .requestMatchers(new AntPathRequestMatcher("/question/list")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/question/detail/**")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/user/login")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/user/signup")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/style.css")).permitAll()
+                                .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
+                                .anyRequest().authenticated())
+                .formLogin(formLogin -> formLogin
+//            .usernameParameter("logindId")  아이디 필드 변경
+//            .passwordParameter("password")  비밀번호 필드 변경
                         .loginPage("/user/login") // 사용자가 정의한 로그인 페이지를 사용
-                        .defaultSuccessUrl("/")); // 성공시 루트로 이동
 
-                return http.build();// 모든 경로에 대해 인증 없이 접근 허용
+                        // POST
+                        .loginProcessingUrl("/user/login") // 로그인 처리 경로
+                        .defaultSuccessUrl("/")) // 성공시 루트로 이동
+        ;
+        return http.build();
     }
 
     @Bean
