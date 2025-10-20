@@ -35,6 +35,11 @@ public class SecurityConfig {
                         // POST
                         .loginProcessingUrl("/user/login") // 로그인 처리 경로
                         .defaultSuccessUrl("/")) // 성공시 루트로 이동
+
+                .logout(logout -> logout
+                        .logoutUrl("/user/logout")
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true))
         ;
         return http.build();
     }
