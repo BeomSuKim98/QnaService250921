@@ -2,6 +2,7 @@ package com.JtoP.Spring.boundedContext.question.service;
 
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
+import com.JtoP.Spring.boundedContext.user.entity.SiteUser;
 import lombok.RequiredArgsConstructor;
 import com.JtoP.Spring.global.exception.DataNotFoundException;
 
@@ -39,13 +40,27 @@ public class QuestionService {
         }
     }
 
-    public void create(String subject, String content) {
+    public Question create(String subject, String content) {
         Question q = Question.builder()
                 .subject(subject)
                 .content(content)
                 .createDate(LocalDateTime.now())
                 .build();
         questionRepository.save(q);
+
+        return q;
+    }
+
+    public Question create(String subject, String content, SiteUser author){
+        Question q = Question.builder()
+                .subject(subject)
+                .content(content)
+                .createDate(LocalDateTime.now())
+                .author(author)
+                .build();
+        questionRepository.save(q);
+
+        return q;
     }
 }
 

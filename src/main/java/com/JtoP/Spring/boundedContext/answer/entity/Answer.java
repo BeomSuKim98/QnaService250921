@@ -1,6 +1,7 @@
 package com.JtoP.Spring.boundedContext.answer.entity;
 
 import com.JtoP.Spring.boundedContext.question.entity.Question;
+import com.JtoP.Spring.boundedContext.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,4 +27,7 @@ public class Answer {
     @ManyToOne
     @ToString.Exclude
     private Question question;
+
+    @ManyToOne
+    private SiteUser author;
 }

@@ -1,6 +1,7 @@
 package com.JtoP.Spring.boundedContext.question.entity;
 
 import com.JtoP.Spring.boundedContext.answer.entity.Answer;
+import com.JtoP.Spring.boundedContext.user.entity.SiteUser;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,9 @@ public class Question {
     private String content;
 
     private LocalDateTime createDate;
+
+    @ManyToOne
+    private SiteUser author;
 
     // mappedBy = "question" -> Answer 클래스의 question 필드와 매핑
     // CascadeType.REMOVE 질문이 삭제되면 그 안에 달려있는 답변도 같이 삭제 됌

@@ -17,8 +17,8 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
 <!--          로그인하지않은 상태-->
-          <a class="nav-link" th:href="@{/user/login}" sec:authorize="isAnnoymous()">로그인</a>
-          <a class="nav-link" href="javascript:void(0);" onclick="this.nextElementsibling.submit()" sec:authorize="isAuthenticated()">로그아웃</a>
+          <a class="nav-link" th:href="@{/user/login}" sec:authorize="isAnonymous()">로그인</a>
+          <a class="nav-link" href="javascript:void(0);" onclick="this.nextElementSibling.submit()" sec:authorize="isAuthenticated()">로그아웃</a>
           <form sec:authorize="isAuthenticated()" method="post" hidden th:action="@{/user/logout}"></form>
         </li>
         <li class="nav-item">

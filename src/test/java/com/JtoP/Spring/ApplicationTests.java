@@ -2,8 +2,10 @@ package com.JtoP.Spring;
 
 import com.JtoP.Spring.boundedContext.answer.entity.Answer;
 import com.JtoP.Spring.boundedContext.answer.repository.AnswerRepository;
+import com.JtoP.Spring.boundedContext.answer.service.AnswerService;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.repository.QuestionRepository;
+import com.JtoP.Spring.boundedContext.user.entity.SiteUser;
 import com.JtoP.Spring.boundedContext.user.repository.UserRepository;
 import com.JtoP.Spring.boundedContext.user.service.UserService;
 import jakarta.transaction.Transactional;
@@ -47,6 +49,9 @@ class ApplicationTests {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AnswerService answerService;
+
     @BeforeEach
         // 각 테스트 메서드가 실행되기 전에 실행되는 메서드
     void beforeEach() {
@@ -61,47 +66,23 @@ class ApplicationTests {
         userRepository.deleteAll();
         userRepository.clearAutoIncrement(); // user 테이블의 AUTO_INCREMENT 초기화
 
-        userService.create("user1", "user1@test.com", "1234");
-        userService.create("user2", "user2@test.com", "1234");
+        SiteUser user1 = userService.create("user1", "user1@test.com", "1234");
+        SiteUser user2 = userService.create("user2", "user2@test.com", "1234");
 
-        Question q1 = new Question();
-        q1.setSubject("sbb가 무엇인가요?");
-        q1.setContent("sbb에 대해서 알고 싶습니다.");
-        q1.setCreateDate(LocalDateTime.now());
-        questionRepository.save(q1);
-
-        Question q2 = Question.builder()
-                .subject("스프링부트 모델 질문입니다.")
-                .content("id는 자동으로 생성되나요?")
-                .createDate(LocalDateTime.now())
-                .build();
-
-        questionRepository.save(q2);
-
+        Question q1 = questionService.create("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user1);
+        Question q2 = questionService.create("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user2);
         // 답변 데이터 생성
-        Answer a1 = new Answer();
-        a1.setContent("네 자동으로 생성됩니다.");
+        Answer a1 = answerService.create(q2, "네 자동으로 생성됩니다.", user1);
         q2.addAnswer(a1); // 양방향 연관관계 설정
         a1.setCreateDate(LocalDateTime.now());
-        answerRepository.save(a1);
     }
 
     @Test
     @DisplayName("데이터저장")
     void t1() {
-        Question q1 = new Question();
-        q1.setSubject("스프링부트 학습은 어떻게 해야 하나요?");
-        q1.setContent("스프링부트 학습은 처음입니다.");
-        q1.setCreateDate(LocalDateTime.now());
-        questionRepository.save(q1);  // 첫 번째 질문 저장
-
-        Question q2 = Question.builder()
-                .subject("스프링부트 모델 질문입니다.")
-                .content("id는 자동으로 생성되나요?")
-                .createDate(LocalDateTime.now())
-                .build();
-
-        questionRepository.save(q2); // 두 번째 질문 저장
+        SiteUser user1 = userService.getUser("user1");
+        questionService.create("스프링부트 학습은 어떻게 해야 하나요?", "스프링부트 학습은 처음입니다.", user1);
+        questionService.create("자바를 이용한 객체 지향 설계는 어떻게 하나요?", "자바 객체지향 설계 방법을 모르겠습니다.", user1);
     }
 
     @Test
@@ -204,19 +185,9 @@ class ApplicationTests {
         // v2
         // Question q = questionRepository.findById(2).get();
 
-        Answer a = new Answer();
-        a.setContent("네 자동으로 생성됩니다.");
-        a.setQuestion(q); // 어떤 질문에 대한 답변인지 알기 위해서 Question 객체 필요
-        a.setCreateDate(LocalDateTime.now());
-        answerRepository.save(a);
-
-        /*  빌더버젼
-        Answer a2 = Answer.builder()
-                .content("네 자동으로 생성됩니다.")
-                .question(q)
-                .createDate(LocalDateTime.now())
-                .build();
-         */
+        SiteUser user2 = userService.getUser("user2");
+        Answer a = answerService.create(q, "네 자동으로 생성됩니다.", user2);
+        assertEquals("네 자동으로 생성됩니다.", a.getContent());
     }
 
     @Test
@@ -248,12 +219,11 @@ class ApplicationTests {
     @Test
     @DisplayName("대량 데이터 삽입")
     void t12() {
-        IntStream.rangeClosed(3, 300).forEach(i -> {
-            Question q = new Question();
-            q.setSubject("테스트 데이터입니다. " + i);
-            q.setContent("내용무");
-            q.setCreateDate(LocalDateTime.now());
-            questionRepository.save(q);
-        });
+        SiteUser user2 = userService.getUser("user2");
+
+        IntStream.rangeClosed(3, 300).forEach(i ->
+            questionService.create(
+           "테스트 제목입니다. %d".formatted(i),
+           "테스트 내용입니다. %d".formatted(i), user2));
     }
 }
