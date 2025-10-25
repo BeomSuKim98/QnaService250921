@@ -15,6 +15,13 @@
 <!--            ${#...} 유틸리티 객체 표현식-->
           </div>
         </div>
+      <div class="my-3">
+        <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
+           sec:authorize="isAuthenticated()"
+           th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+           th:text="수정"></a>
+      </div>
+
       </div>
     </div>
 
