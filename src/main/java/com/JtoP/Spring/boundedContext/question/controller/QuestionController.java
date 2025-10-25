@@ -5,7 +5,10 @@ import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 import com.JtoP.Spring.boundedContext.question.input.QuestionForm;
 import com.JtoP.Spring.boundedContext.answer.input.AnswerForm;
 
+import com.JtoP.Spring.boundedContext.user.entity.SiteUser;
+import com.JtoP.Spring.boundedContext.user.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -22,21 +26,29 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 @RequestMapping("/question")
 public class QuestionController {
+    private final UserService userService;
     private final QuestionService questionService;
 
+    @PreAuthorize("isAuthenticated()")
+    // 메서드 단위 권한 검사를 수행하는 애너테이션
+    // 현재 인증된 사용자가 ADMIN 권한을 가지고 있을 때만 해당 메서드를 실행할 수 있도록 제한
     @GetMapping("/create")
     public String questionCreate(QuestionForm questionForm) {
         return "question/question_form";
     }
 
     @PostMapping("/create")
-    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
-        // 에러 메시지 보유 검사후 있으면 true, 없으면 false 반환
-        if (bindingResult.hasErrors()) {
-            return "question/question_form";
-        }
+    public String questionCreate(
+            @Valid QuestionForm questionForm,
+            BindingResult bindingResult,
+            Principal principal) {
 
-        questionService.create(questionForm.getSubject(), questionForm.getContent());
+        SiteUser siteUser =
+                userService.getUser(principal.getName());
+
+        questionService.create(questionForm.getSubject(),
+                questionForm.getContent(),
+                siteUser);
         return "redirect:/question/list";
     }
 

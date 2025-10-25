@@ -6,8 +6,12 @@ import com.JtoP.Spring.boundedContext.answer.service.AnswerService;
 import com.JtoP.Spring.boundedContext.question.entity.Question;
 import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 
+import com.JtoP.Spring.boundedContext.user.entity.SiteUser;
+import com.JtoP.Spring.boundedContext.user.entity.UserController;
+import com.JtoP.Spring.boundedContext.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,27 +19,31 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/answer")
 public class AnswerController {
+    private final UserService userService;
     private final QuestionService questionService;
     private final AnswerService answerService;
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
     public String createAnswer(Model model,
                                @PathVariable("id") Integer id,
                                @Valid AnswerForm answerForm,
-                               BindingResult bindingResult) {
+                               BindingResult bindingResult,
+                               Principal principal) {
         Question question = questionService.getQuestion(id);
+        SiteUser siteUser = userService.getUser(principal.getName());
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("question", question);
             return  "question/question_detail";
         }
-
-
-        Answer answer = answerService.create(question, answerForm.getContent());
+        Answer answer = answerService.create(question, answerForm.getContent(), siteUser);
 
         return "redirect:/question/detail/%s".formatted(id);
         // 저장이 끝나고 리다이렉트: 브라우저에게 새로운 URL로 이동하라고 지시
