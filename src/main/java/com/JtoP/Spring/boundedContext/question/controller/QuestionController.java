@@ -126,4 +126,15 @@ public class QuestionController {
         questionService.delete(question);
         return "redirect:/";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String questionVote(Principal principal,
+                               @PathVariable("id") Integer id) {
+        Question question = questionService.getQuestion(id);
+        SiteUser siteUser = userService.getUser(principal.getName());
+        questionService.vote(question, siteUser);
+
+        return "redirect:/question/detail/%s".formatted(id);
+    }
 }

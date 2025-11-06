@@ -1,93 +1,97 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
+<div class="container my-3" layout:fragment="content">
   <h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
 
   <div class="card my-3">
     <div class="card-body">
       <div style="white-space: pre-line;" th:text="${question.content}"></div>
-        <div class="d-flex justify-content-end">
-          <div th:if="${question.modifyDate != null}">
-            <div class="badge bg-light text-dark p-2 text-start">
-              <div class="mb-2">수정일시</div>
-              <div th:text="${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
-            </div>
+      <div class="d-flex justify-content-end">
+        <div th:if="${question.modifyDate != null}">
+          <div class="badge bg-light text-dark p-2 text-start">
+            <div class="mb-2">수정일시</div>
+            <div th:text="${#temporals.format(question.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+          </div>
           <div class="badge bg-light text-dark p-2 text-start">
             <div class="mb-2">
               <span th:if="${question.author != null}" th:text="${question.author.username}"></span>
             </div>
             <div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></div>
-<!--            #{} 메시지 표현식-->
-<!--            ${#...} 유틸리티 객체 표현식-->
+            <!--            #{} 메시지 표현식-->
+            <!--            ${#...} 유틸리티 객체 표현식-->
           </div>
         </div>
-      <div class="my-3">
-        <a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
-           sec:authorize="isAuthenticated()"
-           th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
-           th:text="수정"></a>
-        <a onclick="if(!confirm('정말 삭제하시겠습니까?')) return false;"
-           th:href="@{|/question/delete/${question.id}|}" class="btn btn-sm btn-outline-danger"
-           sec:authorize="isAuthenticated()" th:if="${question.author != null and
+        <div class="my-3" sec:authorize="isAuthenticated()">
+          <a class="recommend btn btn-sm btn-outline-secondary" onclick="return confirm('정말 추천하겠습니까?');"
+             th:href="@{|/question/vote/${question.id}|}">
+            추천
+            <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
+          </a>
+          <a class="btn btn-sm btn-outline-secondary"
+             th:href="@{|/question/modify/${question.id}|}"
+             th:if="${question.author != null and #authentication.getPrincipal().getUsername() == question.author.username}"
+             th:text="수정"></a>
+          <a class="btn btn-sm btn-outline-danger"
+             onclick="if(!confirm('정말 삭제하시겠습니까?')) return false;"
+             th:href="@{|/question/delete/${question.id}|}" th:if="${question.author != null and
            #authentication.getPrincipal().getUsername() == question.author.username}" th:text="삭제"></a>
-      </div>
+        </div>
       </div>
     </div>
 
 
+    <!-- 답변의 갯수 표시 -->
+    <h5 sec:authorize="isAnonymous()">로그인 후 답변을 확인할 수 있습니다.</h5>
+    <h5 class="border-bottom my-3 py-2" sec:authorize="isAuthenticated()"
+        th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
+    <!-- 답변 반복 시작 -->
+    <div class="card my-3" th:each="answer : ${question.answerList}">
+      <div class="card-body">
+        <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
 
-  <!-- 답변의 갯수 표시 -->
-  <h5 sec:authorize="isAnonymous()">로그인 후 답변을 확인할 수 있습니다.</h5>
-  <h5 sec:authorize="isAuthenticated()" class="border-bottom my-3 py-2"
-      th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
-  <!-- 답변 반복 시작 -->
-  <div class="card my-3" th:each="answer : ${question.answerList}">
-    <div class="card-body">
-      <div class="card-text" style="white-space: pre-line;" th:text="${answer.content}"></div>
-
-      <div class="d-flex justify-content-end">
-        <div th:if="${answer.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-2">
-          <div class="mb-2">수정일시</div>
-          <div th:text="${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
-        </div>
+        <div class="d-flex justify-content-end">
+          <div class="badge bg-light text-dark p-2 text-start mx-2" th:if="${answer.modifyDate != null}">
+            <div class="mb-2">수정일시</div>
+            <div th:text="${#temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+          </div>
           <div class="badge bg-light text-dark p-2 text-start">
             <div class="mb-2">
               <span th:if="${answer.author != null}" th:text="${answer.author.username}"></span>
-             <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
-             </div>
+              <div th:text="${#temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+            </div>
           </div>
-       </div>
+        </div>
 
-      <div class="my-3">
-        <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-           sec:authorize="isAuthenticated()" th:if="${answer.author != null and
+        <div class="my-3">
+          <a class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+             th:href="@{|/answer/modify/${answer.id}|}" th:if="${answer.author != null and
            #authentication.getPrincipal().getUsername() == answer.author.username}" th:text="수정">
-        </a>
-      </div>
+          </a>
+        </div>
 
-      <a onclick="if(!confirm('정말 삭제하시겠습니까?')) return false;"
-         th:href="@{|/answer/delete/${answer.id}|}" class="btn btn-sm btn-outline-danger"
-         sec:authorize="isAuthenticated()" th:if="${answer.author != null and
+        <a class="btn btn-sm btn-outline-danger"
+           onclick="if(!confirm('정말 삭제하시겠습니까?')) return false;" sec:authorize="isAuthenticated()"
+           th:href="@{|/answer/delete/${answer.id}|}" th:if="${answer.author != null and
          #authentication.getPrincipal().getUsername() == answer.author.username}" th:text="삭제">
-      </a>
+        </a>
 
       </div>
-  </div>
-  <!-- 답변 반복 끝  -->
-  <!-- 답변 작성 -->
-  <form th:action="@{|/answer/create/${question.id}|}" method="post" th:object="${answerForm}" class="my-3">
-    <div th:replace="~{form_errors :: formErrorsFragment}"></div>
-    <textarea sec:authorize="isAnonymous()"
-              disabled th:field="*{content}"
-              class="form-control"
-              rows="10"></textarea>
-    <textarea sec:authorize="isAuthenticated()"
-              maxlength="20000"
-              placeholder="내용을 입력해주세요.(20,000자 이내)"
-              th:field="*{content}"
-              class="form-control"
-              rows="10"></textarea>
-    <input sec:authorize="isAnonymous()" disabled type="submit" value="답변등록" class="btn btn-primary my-2">
-    <input sec:authorize="isAuthenticated()" type="submit" value="답변등록" class="btn btn-primary my-2">
+    </div>
+    <!-- 답변 반복 끝  -->
+    <!-- 답변 작성 -->
+    <form class="my-3" method="post" th:action="@{|/answer/create/${question.id}|}" th:object="${answerForm}">
+      <div th:replace="~{form_errors :: formErrorsFragment}"></div>
+      <textarea class="form-control"
+                disabled rows="10"
+                sec:authorize="isAnonymous()"
+                th:field="*{content}"></textarea>
+      <textarea class="form-control"
+                maxlength="20000"
+                placeholder="내용을 입력해주세요.(20,000자 이내)"
+                rows="10"
+                sec:authorize="isAuthenticated()"
+                th:field="*{content}"></textarea>
+      <input class="btn btn-primary my-2" disabled sec:authorize="isAnonymous()" type="submit" value="답변등록">
+      <input class="btn btn-primary my-2" sec:authorize="isAuthenticated()" type="submit" value="답변등록">
     </form>
   </div>
 </html>
