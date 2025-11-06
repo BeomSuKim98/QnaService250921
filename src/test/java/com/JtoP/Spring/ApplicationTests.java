@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("test")
 class ApplicationTests {
+
+    @Autowired javax.sql.DataSource ds;
+
+    @Test
+    void whereAmI() throws Exception {
+        try (var c = ds.getConnection()) {
+            System.out.println("URL = " + c.getMetaData().getURL());
+            try (var rs = c.createStatement().executeQuery("SELECT DATABASE()")) {
+                rs.next();
+                System.out.println("DB  = " + rs.getString(1));
+            }
+        }
+    }
+
 
     @Autowired
     private QuestionRepository questionRepository;
