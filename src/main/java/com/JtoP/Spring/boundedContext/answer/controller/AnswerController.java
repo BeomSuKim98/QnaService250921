@@ -48,7 +48,7 @@ public class AnswerController {
         }
         Answer answer = answerService.create(question, answerForm.getContent(), siteUser);
 
-        return "redirect:/question/detail/%s".formatted(id);
+        return "redirect:/question/detail/%s#answer/%s".formatted(answer.getQuestion().getId(),answer.getId());
         // 저장이 끝나고 리다이렉트: 브라우저에게 새로운 URL로 이동하라고 지시
     }
 
@@ -82,7 +82,7 @@ public class AnswerController {
         }
 
         answerService.modify(answer, answerForm.getContent());
-        return "redirect:/question/detail/%s".formatted(answer.getQuestion().getId());
+        return "redirect:/question/detail/%s#answer_%s".formatted(answer.getQuestion().getId(), answer.getId());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -104,6 +104,6 @@ public class AnswerController {
         Answer answer = answerService.getAnswer(id);
         SiteUser siteUser = userService.getUser(principal.getName());
         answerService.vote(answer, siteUser);
-        return "redirect:/question/detail/%s".formatted(answer.getQuestion().getId());
+        return "redirect:/question/detail/%s#answer_%s".formatted(answer.getQuestion().getId(), answer.getId());
     }
 }
