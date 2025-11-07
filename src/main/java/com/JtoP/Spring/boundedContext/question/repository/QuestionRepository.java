@@ -5,6 +5,7 @@ import com.JtoP.Spring.boundedContext.question.entity.Question;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,7 +21,7 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
     List<Question> findBySubjectLike(String keyword);
 
     //    페이징 된 데이터를 반환
-    Page<Question> findAll(Pageable pageable);
+    Page<Question> findAll(Specification<Question> spec, Pageable pageable);
 
     @Modifying // Query는 기본적으로 SELECT 문에 사용되므로
     // INSERT, UPDATE, DELETE 같은 변경 작업을 수행할 때는 @Modifying 어노테이션이 필요

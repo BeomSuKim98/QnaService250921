@@ -17,6 +17,7 @@ import com.JtoP.Spring.boundedContext.question.service.QuestionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -87,8 +88,13 @@ class ApplicationTests {
         Question q1 = questionService.create("sbb가 무엇인가요?", "sbb에 대해서 알고 싶습니다.", user1);
         Question q2 = questionService.create("스프링부트 모델 질문입니다.", "id는 자동으로 생성되나요?", user2);
         // 답변 데이터 생성
-        Answer a1 = answerService.create(q2, "네 자동으로 생성됩니다.", user1);
-        q2.addAnswer(a1); // 양방향 연관관계 설정
+        // 1번 질문에 대한 답변
+        Answer a1 = answerService.create(q1, "네 자동으로 생성됩니다.", user2);
+        q1.addAnswer(a1); // 질문과 답변을 한 로직에서 처리 가능
+
+        // 2번 질문에 대한 답변
+        Answer a2 = answerService.create(q2, "sbb는 스프링부트 프로젝트입니다.", user2);
+        q2.addAnswer(a2);
         a1.setCreateDate(LocalDateTime.now());
     }
 
@@ -241,4 +247,35 @@ class ApplicationTests {
            "테스트 제목입니다. %d".formatted(i),
            "테스트 내용입니다. %d".formatted(i), user2));
     }
+
+    @Test
+    @DisplayName("검색, 질문 내용으로 검색")
+    void t13() {
+        Page<Question> searchResult = questionService.getList(0, "sbb에 대해서 알고 싶습니다.");
+        assertEquals(1, searchResult.getTotalElements());
+    }
+
+    @Test
+    @DisplayName("검색, 질문자 이름으로 검색")
+    void t14() {
+        Page<Question> searchResult = questionService.getList(0, "user1");
+        assertEquals(1, searchResult.getTotalElements());
+    }
+
+    @Test
+    @DisplayName("검색, 답변 내용으로 검색")
+    void t15() {
+        Page<Question> searchResult = questionService.getList(0, "네 자동으로 생성됩니다.");
+        assertEquals(1, searchResult.getContent().get(0).getId());
+        assertEquals(1, searchResult.getTotalElements());
+    }
+
+    @Test
+    @DisplayName("검색, 답변자 이름으로 검색")
+    void t16() {
+        Page<Question> searchResult = questionService.getList(0, "user2");
+        assertEquals(2, searchResult.getContent().get(0).getId());
+        assertEquals(2, searchResult.getTotalElements());
+    }
+
 }
