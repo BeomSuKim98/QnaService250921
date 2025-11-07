@@ -33,6 +33,11 @@ public class QuestionService {
 
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         // SELECT * FROM question ORDER BY create_date DESC LIMIT 0, 10
+
+        if(kw == null || kw.trim().isEmpty()) {
+            return questionRepository.findAll(pageable);
+        }
+
         Specification<Question> spec = search(kw);
 
         return questionRepository.findAll(spec, pageable);
