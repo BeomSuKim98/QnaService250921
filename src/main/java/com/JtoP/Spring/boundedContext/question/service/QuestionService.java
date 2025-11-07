@@ -44,24 +44,20 @@ public class QuestionService {
     }
 
     private Specification<Question> search(String kw) {
-        return (root, query, cb) -> {
-            query.distinct(true); // JOIN으로 생긴 중복 제거
-
-            // 조인들
-            Join<Question, SiteUser> qAuthor = root.join("author", JoinType.LEFT);
-            Join<Question, Answer> answers = root.join("answerList", JoinType.LEFT);
-            Join<Answer, SiteUser> aAuthor = answers.join("author", JoinType.LEFT);
-
-            // 대소문자 무시 검색
-            String like = "%" + (kw == null ? "" : kw.trim().toLowerCase()) + "%";
-
-            return cb.or(
-                    cb.like(cb.lower(root.get("subject")), like),          // 질문 제목
-                    cb.like(cb.lower(root.get("content")), like),          // 질문 내용
-                    cb.like(cb.lower(qAuthor.get("username")), like),      // 질문 작성자
-                    cb.like(cb.lower(answers.get("content")), like),       // 답변 내용
-                    cb.like(cb.lower(aAuthor.get("username")), like)       // 답변 작성자
-            );
+        return new Specification<>() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Predicate toPredicate(Root<Question> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);  // 중복을 제거
+                Join<Question, SiteUser> u1 = q.join("author", JoinType.LEFT);
+                Join<Question, Answer> a = q.join("answerList", JoinType.LEFT);
+                Join<Answer, SiteUser> u2 = a.join("author", JoinType.LEFT);
+                return cb.or(cb.like(q.get("subject"), "%" + kw + "%"), // 제목
+                        cb.like(q.get("content"), "%" + kw + "%"),      // 내용
+                        cb.like(u1.get("username"), "%" + kw + "%"),    // 질문 작성자
+                        cb.like(a.get("content"), "%" + kw + "%"),      // 답변 내용
+                        cb.like(u2.get("username"), "%" + kw + "%"));   // 답변 작성자
+            }
         };
     }
 

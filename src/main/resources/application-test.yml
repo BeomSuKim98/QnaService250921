@@ -1,15 +1,6 @@
 # 테스트 모드
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-
-    properties:
-      hibernate:
-        format_sql: true
-
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://127.0.0.1:3306/qnaService__test?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
 
 logging:
